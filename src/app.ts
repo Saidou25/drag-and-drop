@@ -85,3 +85,45 @@ class ProjectForm {
 }
 
 const prj = new ProjectForm();
+
+class ProjectList {
+  templateElement: HTMLTemplateElement;
+  hostElement: HTMLDivElement;
+  projectListElement: HTMLElement;
+
+  constructor(private type: "active" | "finished") {
+    this.templateElement = document.getElementById(
+      "project-list"
+    ) as HTMLTemplateElement;
+    this.hostElement = document.getElementById("app") as HTMLDivElement;
+    this.projectListElement = document.querySelector(".project") as HTMLElement;
+
+    // Import the content of the template
+    const importedNode = document.importNode(
+      this.templateElement.content,
+      true
+    );
+    this.projectListElement = importedNode.firstElementChild as HTMLFormElement;
+    this.projectListElement.id = `${this.type}-projects`;
+
+    this.attach();
+    this.renderContent();
+  }
+
+  private renderContent() {
+    const listId = `${this.type}-projects-list`;
+    this.projectListElement.querySelector("h2")!.textContent =
+      this.type.toUpperCase() + " PROJECTS";
+    this.projectListElement.querySelector("ul")!.id = listId;
+  }
+
+  private attach() {
+    this.hostElement.insertAdjacentElement(
+      "beforeend",
+      this.projectListElement
+    );
+  }
+}
+
+const activePrjList = new ProjectList("active")
+const finishedPrjList = new ProjectList("finished")
